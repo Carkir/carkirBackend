@@ -27,3 +27,5 @@ const firestore = new Firestore({})
 app.listen(port,()=>{
     console.log(`Listening at ${port}`)
 })
+
+module.exports = db
