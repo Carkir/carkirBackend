@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-const router = express.Router()
+// const router = express.Router()
 
-router.get('/',(req,res)=>{
+app.get('/',(req,res)=>{
     res.send('Tes Get Home')
 })
 
-module.exports = router
+module.exports = app
