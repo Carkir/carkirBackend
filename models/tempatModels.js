@@ -3,27 +3,29 @@ const mongoose = require('mongoose')
 const tempatSchema = new mongoose.Schema({
     namaTempat: {
         type: String,
-        required: true
+        // required: true
     },
     thumbnail: {
         type: String,
-        required: true
+        // required: true
     },
     totalTempatParkir: {
         type: String,
-        required: true
+        // required: true
     },
     alamat: {
         type: String,
-        required: true
+        // required: true
     },
     harga: {
         type: String,
-        required: true
+        // required: true
     },
     waktuBuka: {
         type: String,
-        required: true
+        // required: true
     },
 },{strict:false})
-module.exports = mongoose.model('tempatParkir',tempatSchema)
+
+const Item = mongoose.model('tempatParkir',tempatSchema)
+module.exports = Item
