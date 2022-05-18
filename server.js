@@ -8,7 +8,7 @@ const tes = require('./routes/testRoutes')
 const inputData = require('./routes/inputDataRoutes') 
 
 //connect to db
-mongoose.connect( process.env.CONNECTION_STRING,{
+mongoose.connect( `${process.env.CONNECTION_STRING}`,{
     useNewUrlParser : true,
     useUnifiedTopology : true
 })
