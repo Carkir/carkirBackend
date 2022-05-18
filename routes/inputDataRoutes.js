@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const path = require('path')
 const fs = require('fs')
 const Item = require('../models/tempatModels')
 const bodyParser = require('body-parser');
@@ -22,33 +23,66 @@ app.get('/:tempatParkir&:floor&:cluster&:slot', async(req,res)=>{
 })
 
 app.get('/input', (req,res)=>{
-    readDataFromJson()
+  inputDataFromJson()
     res.send('halo')
 })
 
-app.post('/', async function(req, res) {
-    // Insert JSON straight into MongoDB
-   db.collection('employees').insert(req.body, function (err, result) {
-       if (err)
-          res.send('Error');
-       else
-         res.send('Success');
- 
-   });
- });
+app.get('/update', async(req,res)=>{
+  updateDataFromJson()
+  res.send("update berhasil")
+})
 
-async function readDataFromJson(){
-    const data = fs.readFileSync("Mall_Metropolitan.json", "utf8", (err, jsonString) => {
+async function inputDataFromJson(){
+const directoryPath = path.join(__dirname, '../Documents');
+//passsing directoryPath and callback function
+fs.readdir(directoryPath, function (err, files) {
+    //handling error
+    if (err) {
+        return console.log('Unable to scan directory: ' + err);
+    } 
+    //listing all files using forEach
+    files.forEach(async function (file) {
+      const data = fs.readFileSync(path.resolve(__dirname, "../Documents/"+file), "utf8", (err, jsonString) => {
         if (err) {
           console.log("File read failed:", err);
           return;
         }  
       });
       const item = new Item({
-        tempatParkir : "Fasilkom",
-        coba2 : JSON.parse(data)
+        tempatParkir : path.parse(file).name,
+        denah : JSON.parse(data)
       })
-      await item.save()
+      await item.save()  
+        console.log(file); 
+    });
+});
 
+}
+
+async function updateDataFromJson(){
+  const directoryPath = path.join(__dirname, '../Documents');
+  //passsing directoryPath and callback function
+  fs.readdir(directoryPath, function (err, files) {
+      //handling error
+      if (err) {
+          return console.log('Unable to scan directory: ' + err);
+      } 
+      //listing all files using forEach
+      files.forEach(async function (file) {
+        const data = fs.readFileSync(path.resolve(__dirname, "../Documents/"+file), (err, jsonString) => {
+          if (err) {
+            console.log("File read failed:", err);
+            return;
+          }  
+        });
+        await Item.updateOne( { tempatParkir: path.parse(file).name },
+            {
+              $set: {
+                denah : JSON.parse(data)
+              }
+            })
+          console.log(file); 
+      });
+    });
 }
 module.exports = app
