@@ -4,7 +4,6 @@ ARG buildtime_variable=mongodb+srv://carkirAdmin:armeldeafaldyfarhanyogayusuf@cl
 ENV CONNECTION_STRING=$buildtime_variable
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
