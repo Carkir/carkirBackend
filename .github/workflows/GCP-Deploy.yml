@@ -1,4 +1,4 @@
-name: Docker
+name: Android API Ci/CD pipelines
 
 on:
   push:
@@ -25,9 +25,12 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
+      - name: Build Docker image
+        run: docker build -t $IMAGE_NAME .
+
       - name: Push Docker Image
         run: docker push $IMAGE_NAME
 
-      - name: Deploy Docke Image
+      - name: Deploy Docker Image
         run: gcloud run deploy ${{ secrets.DEPLOY_NAME }} --image $IMAGE_NAME --region asia-southeast2 --platform managed --allow-unauthenticated
 
