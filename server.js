@@ -6,6 +6,10 @@ const port = process.env.PORT || 8080
 require('dotenv').config();
 const tes = require('./routes/testRoutes') 
 const inputData = require('./routes/inputDataRoutes') 
+const chokidar = require('chokidar')
+const watcher = chokidar.watch('./Documents',{ignored: /^\./, persistent: true})
+const fs = require('fs')
+const { dirname } = require('path')
 
 //connect to db
 mongoose.connect( `${process.env.CONNECTION_STRING}`,{
@@ -21,11 +25,16 @@ db.once('open', ()=>{console.log("connection success")})
 app.use(express.static(__dirname+'public'))
 app.use('/',tes)
 app.use('/read',inputData)
+app.use(express.static(dirname+'Documentd'))
 
 const firestore = new Firestore({})
 
 app.listen(port,()=>{
     console.log(`Listening at ${port}`)
 })
+
+
+
+
 
 module.exports = db

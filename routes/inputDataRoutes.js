@@ -85,4 +85,16 @@ async function updateDataFromJson(){
       });
     });
 }
+
+var fsTimeout
+
+fs.watch('Documents', function(e) {
+
+    if (!fsTimeout) {
+        updateDataFromJson()
+        fsTimeout = setTimeout(function() { fsTimeout=null }, 5000) // give 5 seconds for multiple events
+    }
+})
+
+app.post('/register2',)
 module.exports = app
