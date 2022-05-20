@@ -5,7 +5,8 @@ const {Firestore} = require('@google-cloud/firestore')
 const port = process.env.PORT || 8080
 require('dotenv').config();
 const tes = require('./routes/testRoutes') 
-const inputData = require('./routes/inputDataRoutes') 
+const inputData = require('./routes/inputDataRoutes')
+const imageData = require('./routes/imageRoutes') 
 const chokidar = require('chokidar')
 const watcher = chokidar.watch('./Documents',{ignored: /^\./, persistent: true})
 const fs = require('fs')
@@ -17,6 +18,7 @@ mongoose.connect( `${process.env.CONNECTION_STRING}`,{
     useUnifiedTopology : true
 })
 
+console.log(process.env.CONNECTION_STRING)
 //display connection status
 const db = mongoose.connection
 db.on('error', console.error.bind(console, "connection error:"))
@@ -25,7 +27,8 @@ db.once('open', ()=>{console.log("connection success")})
 app.use(express.static(__dirname+'public'))
 app.use('/',tes)
 app.use('/read',inputData)
-app.use(express.static(dirname+'Documentd'))
+app.use('/image',imageData)
+app.use(express.static(dirname+'Documentsl'))
 
 const firestore = new Firestore({})
 

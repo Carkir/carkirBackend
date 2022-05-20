@@ -50,6 +50,8 @@ fs.readdir(directoryPath, function (err, files) {
       });
       const item = new Item({
         tempatParkir : path.parse(file).name,
+        headerImage: null,
+        alamat: null,
         denah : JSON.parse(data)
       })
       await item.save()  
