@@ -20,8 +20,12 @@ app.post('/convert/:id',async(req,res)=>{
 app.get('/getheader/:id',async(req,res)=>{
     const id = req.params.id.toString()
     const result = await Item.find({tempatParkir:id},{_id:0,headerImage:1})
-    const mimeType ='image/png'
-    res.send(`<img src="data:${mimeType};base64,${result[0].headerImage}" />`)
+    if(result.length == 0){
+        res.send('cannot find image by that id')
+    }else{
+        const mimeType ='image/png'
+        res.send(`<img src="data:${mimeType};base64,${result[0].headerImage}" />`)
+    }
 })
 
 module.exports = app
