@@ -7,6 +7,7 @@ require('dotenv').config();
 const tes = require('./routes/testRoutes') 
 const inputData = require('./routes/inputDataRoutes')
 const imageData = require('./routes/imageRoutes') 
+const readData = require('./routes/readDataRoutes') 
 const chokidar = require('chokidar')
 const watcher = chokidar.watch('./Documents',{ignored: /^\./, persistent: true})
 const fs = require('fs')
@@ -26,8 +27,9 @@ db.once('open', ()=>{console.log("connection success")})
 
 app.use(express.static(__dirname+'public'))
 app.use('/',tes)
-app.use('/read',inputData)
+app.use('/input',inputData)
 app.use('/image',imageData)
+app.use('/read',readData)
 app.use(express.static(dirname+'Documentsl'))
 
 const firestore = new Firestore({})
