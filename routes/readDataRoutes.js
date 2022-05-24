@@ -10,27 +10,37 @@ const  db  = require('../server')
 const { count } = require('console')
 app.use(bodyParser.json())
 
+app.get('/tes/:tempatParkir&:floor&:cluster&:slot', async (req, res) => {
+    const tempatParkir = req.params.tempatParkir
+    const floor = req.params.floor
+    const cluster = req.params.cluster
+    const slot = req.params.slot
+    const result = await Item.find({
+      tempatParkir: `${tempatParkir}`,
+      denah: { $elemMatch: { Floor: Number(floor), Cluster: `${cluster}`, Slot: Number(slot) } }
+    }, {
+      _id: 0, "denah.Occupancy.$": 1
+    })
+    res.send(Object.values(result[0].denah[0])).status(201)
+})
+
 app.get('/:tempatParkir', async(req,res)=>{
     const tempatParkir = req.params.tempatParkir
-    // const result = await Item.find({
-    //   tempatParkir:`${tempatParkir}`
-    // })
-    const result = await Item.find({
-        tempatParkir:`${tempatParkir}` , 
-        denah:{$elemMatch:{Cluster:"A"}}},{_id:0,'denah.Cluster':1
+    const result = await Item.findOne({
+        tempatParkir: `${tempatParkir}`
       })
-    function countCluster(){
-        // let i =0
-        // let count=0
-        // while(i<result[0].denah.length){
-        //     if(result[0].denah[i].Cluster=='A')
-        //     count++
-        //     i++
-        // }
-        // return count
+    const output={
+        tempatParkir: result.tempatParkir,
+        address: result.tempatParkir,
+        status: result.status,
+        timeOpen: result.timeOpen,
+        timeClose: result.timeClose,
+        priceLow: result.priceLow,
+        priceHigh: result.priceHigh,
+        totalEmptySpace: result.totalEmptySpace,
+        location: result.clusterCount
     }
-    console.log(countCluster())
-    res.send(Object.values(result)).status(201)
+    res.send(output).status(201)
 })
 
 module.exports = app
