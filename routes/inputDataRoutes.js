@@ -45,9 +45,13 @@ async function inputDataFromJson(filename) {
   const item = new Item({
     tempatParkir: filename,
     headerImage: null,
-    alamat: null,
+    alamat: '',
     priceLow: 1000,
     priceHigh: 10000,
+    timeOpen : 1655769600000,
+    timeClose : 1655805600000,
+    status : '',
+    totalEmptySpace: 0,
     denah: JSON.parse(contents)
   })
   await item.save()
