@@ -80,7 +80,7 @@ async function inputDataFromJson(filename) {
         includeArrayIndex: "arrayIndex"}},
       {$match:{
         tempatParkir: tempatParkir,
-        'denah.Occupancy':0
+        'denah.Occupancy':1
       }},
     {$group: {
       '_id':0,
