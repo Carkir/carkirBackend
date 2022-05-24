@@ -40,10 +40,7 @@ app.get('/:tempatParkir', async(req,res)=>{
         totalEmptySpace: result.totalEmptySpace,
         location: result.clusterCount
     }
-    res.send(
-        
-        result.alamat
-        ).status(201)
+    res.send(output).status(201)
 })
 
 module.exports = app
