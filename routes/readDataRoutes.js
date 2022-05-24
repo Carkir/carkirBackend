@@ -32,7 +32,7 @@ app.get('/:tempatParkir', async(req,res)=>{
       })
     const output={
         name: result.name,
-        address: result.tempatParkir,
+        address: result.address,
         status: result.status,
         time: result.time,
         priceLow: result.priceLow,
