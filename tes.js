@@ -1,3 +1,5 @@
-const a = 'yusuf_agung'
-const b = a.split('_').join(' ')
-console.log(b)
+const date = new Date(1655805600000)
+const now = new Date()
+date.setFullYear(2022,2,24)
+now.setFullYear(2022,2,24)
+console.log(date.getTime()< now.getTime())

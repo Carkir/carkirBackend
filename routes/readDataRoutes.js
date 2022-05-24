@@ -31,11 +31,10 @@ app.get('/:tempatParkir', async(req,res)=>{
         tempatParkir: `${tempatParkir}`
       })
     const output={
-        tempatParkir: result.tempatParkir,
+        name: result.name,
         address: result.tempatParkir,
         status: result.status,
-        timeOpen: result.timeOpen,
-        timeClose: result.timeClose,
+        time: result.time,
         priceLow: result.priceLow,
         priceHigh: result.priceHigh,
         totalEmptySpace: result.totalEmptySpace,
