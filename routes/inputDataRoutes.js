@@ -1,87 +1,44 @@
 const express = require('express')
 const app = express()
-const path = require('path')
-const fs = require('fs')
-const Item = require('../models/tempatModels')
 const bodyParser = require('body-parser');
-const res = require('express/lib/response');
-const { json } = require('express/lib/response');
-const db = require('../server')
 const _ = require('underscore')
-const { isMapIterator } = require('util/types')
-const {Storage} = require('@google-cloud/storage');
-const storage = new Storage();
-const https= require('https');
-
+const multer = require('multer')
+const forms = multer()
+const {inputDataFromJson} = require('../functions/input')
+const {updateInfo} = require('../functions/update')
 app.use(bodyParser.json())
+app.use(forms.array())
+app.use(bodyParser.urlencoded({extended:true}))
+
 
 app.get('/input/:filename', (req, res) => {
   const filename = req.params.filename
-  inputDataFromJson(filename)
+  inputDataFromJson(filename).total
   res.send('halo')
 })
 
-async function inputDataFromJson(filename) {
-  bucketName = 'carkir-storage'
-  const nameExtension = filename + '.json'
-  const contents = await storage.bucket(bucketName).file(nameExtension).download();
+app.post('/update/:tempatParkir',(req,res) => {
+  const tempatParkir = req.params.tempatParkir
+  const hourOpen = req.body.hourOpen
+  const hourClose = req.body.hourClose
+  const minuteOpen = req.body.minuteOpen
+  const minuteClose = req.body.minuteClose
+  const priceHigh = req.body.priceHigh
+  const priceLow = req.body.priceLow
+  const alamat = req.body.alamat
 
-  const result = await Item.findOne({
-    tempatParkir: `${filename}`
-  })
+  if(!tempatParkir || !hourOpen || !hourClose || !minuteOpen || !minuteClose || !priceHigh || !priceLow || !alamat){
+    res.send('please fill all the required form').status(400)
+  }else{
+    try{
+      updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose,priceHigh,priceLow,alamat)
+      res.send(`success updating ${tempatParkir}`)
+    }catch(error){
+      res.send(`failed to update info, reason : ${error}`).status(500)
+    }
 
-  if(result){
-    await Item.updateOne(
-      { tempatParkir: filename },
-      { $set: {
-          denah: JSON.parse(contents)
-        }
-      }
-    )
-    countCluster(filename)
-    return
   }
 
-  const item = new Item({
-    tempatParkir: filename,
-    headerImage: null,
-    alamat: '',
-    priceLow: 1000,
-    priceHigh: 10000,
-    timeOpen : 1655769600000,
-    timeClose : 1655805600000,
-    status : '',
-    totalEmptySpace: 0,
-    denah: JSON.parse(contents)
-  })
-  await item.save()
-  countCluster(filename)
-}
+})
 
-async function countCluster(filename) {
-  bucketName = 'carkir-storage'
-  const nameExtension = filename + '.json'
-  const contents = await storage.bucket(bucketName).file(nameExtension).download();
-    let floor = 1
-    const data = JSON.parse(contents)
-    const result = _.countBy(data, function (data1) {
-      if (data1.Floor == floor){
-        if (data1.Occupancy == 1.0) {
-          let i = data1.Floor + "" + data1.Cluster
-          return i;
-        }
-      } else {
-        floor = data1.floor
-        if (data1.Occupancy == 1.0){
-          let i = data1.Floor + "" + data1.Cluster
-          return i;
-        }
-      }
-    })
-  await Item.updateOne({ tempatParkir: filename },
-    { $set: {
-        clusterCount: result
-      }
-    })
-}
 module.exports = app
