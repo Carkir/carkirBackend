@@ -98,7 +98,7 @@ async function inputDataFromJson(filename) {
   await item.save()
 }
 
-async function countCluster() {
+async function countCluster(filename) {
   bucketName = 'carkir-storage'
   const nameExtension = filename + '.json'
   const contents = await storage.bucket(bucketName).file(nameExtension).download();
