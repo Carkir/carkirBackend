@@ -14,6 +14,7 @@ async function inputDataFromJson(filename) {
     })
   
     if(result){
+      console.log('Waduh ada')
       const totalObject = await findEmptySpace(filename)
       const totalValue = Number(totalObject.total)
       await Item.updateOne(
@@ -28,7 +29,6 @@ async function inputDataFromJson(filename) {
       return
     }
     const placeName = filename.split('_').join(' ')
-    str.replace
     const item = new Item({
       tempatParkir: filename,
       name: placeName.toString(),  
