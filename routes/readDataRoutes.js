@@ -1,13 +1,10 @@
 const express = require('express')
 const app = express()
-const path = require('path')
-const fs = require('fs')
 const Item = require('../models/tempatModels')
 const bodyParser = require('body-parser');
-const res = require('express/lib/response');
-const { json } = require('express/lib/response');
-const  db  = require('../server')
-const { count } = require('console')
+const {findEmptySpace} = require('../functions/input')
+
+
 app.use(bodyParser.json())
 
 app.get('/tes/:tempatParkir&:floor&:cluster&:slot', async (req, res) => {
@@ -22,6 +19,10 @@ app.get('/tes/:tempatParkir&:floor&:cluster&:slot', async (req, res) => {
       _id: 0, "denah.Occupancy.$": 1
     })
     res.send(Object.values(result[0].denah[0])).status(201)
+})
+
+app.get('/allPlace',async(req,res)=>{
+  res.send(await Item.find({},{_id:0,name:1,status:1,time:1,totalEmptySpace:1})).status(200)
 })
 
 app.get('/:tempatParkir', async(req,res)=>{
