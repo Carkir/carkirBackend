@@ -36,15 +36,17 @@ app.get('/Occupancy/:tempatParkir/:floor', async (req, res) => {
     tempatParkir: `${tempatParkir}`
   })
   const data = result[0].denah
+  let Occupancy = 0
 
   const filterDataByFloor = []
   data.forEach(element => {
     if(element.Floor == floor){
       filterDataByFloor.push(element)
+      Occupancy += element.Occupancy
     }
   });
-
-  res.send(filterDataByFloor).status(201)
+  filterDataByFloor.unshift(Occupancy)
+  res.status(201).send(filterDataByFloor)
 })
 
 app.get('/:tempatParkir', async(req,res)=>{
