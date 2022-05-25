@@ -28,7 +28,7 @@ app.post('/regPhase1',async(req,res)=>{
     try{
         const credentialResult = await Credentials.find({username : username})
         if(credentialResult.length > 0){
-            res.send('username already taken!').status(409)
+            res.status(409).send('username already taken!')
         }else{
             res.send({
                 userId: userId,
@@ -85,7 +85,7 @@ app.post('/login',async(req,res)=>{
     const password = req.body.password
 
     if(!username || !password){
-        res.send('please fill all require form : username and password').status(400)
+        res.status(400).send('please fill all require form : username and password')
         return
     }
 
@@ -95,11 +95,15 @@ app.post('/login',async(req,res)=>{
             const account = await Users.findOne({userId : accountMatcher.userId},{_id:0,userId:1,email:1,name:1,adminStatus:1})
             res.send(account)
         }else{
-            res.send(`username and password aren't match`).status(401)
+            res.status(401).send(`username and password aren't match`)
         }
     }else{
-        res.send(`username and password aren't match`).status(401)
+        res.status(401).send(`username and password aren't match`)
     }
+})
+
+app.post('/',(req,res)=>{
+    res.send('error').status(400)
 })
 
 module.exports = app

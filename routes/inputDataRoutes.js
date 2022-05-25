@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 app.get('/input/:filename', (req, res) => {
   const filename = req.params.filename
-  inputDataFromJson(filename).total
+  inputDataFromJson(filename)
   res.send('halo')
 })
 
@@ -28,7 +28,7 @@ app.post('/update/:tempatParkir',(req,res) => {
   const alamat = req.body.alamat
 
   if(!tempatParkir || !hourOpen || !hourClose || !minuteOpen || !minuteClose || !priceHigh || !priceLow || !alamat){
-    res.send('please fill all the required form').status(400)
+    res.status(400).send('please fill all the required form')
   }else{
     try{
       updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose,priceHigh,priceLow,alamat)
