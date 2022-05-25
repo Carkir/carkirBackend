@@ -95,10 +95,10 @@ app.post('/login',async(req,res)=>{
             const account = await Users.findOne({userId : accountMatcher.userId},{_id:0,userId:1,email:1,name:1,adminStatus:1})
             res.send(account)
         }else{
-            res.send(`username and password aren't match`)
+            res.send(`username and password aren't match`).status(401)
         }
     }else{
-        res.send(`username and password aren't match`)
+        res.send(`username and password aren't match`).status(401)
     }
 })
 
