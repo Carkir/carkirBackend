@@ -22,7 +22,7 @@ app.get('/tes/:tempatParkir&:floor&:cluster&:slot', async (req, res) => {
 })
 
 app.get('/allPlace',async(req,res)=>{
-  res.send(await Item.find({},{_id:0,name:1,status:1,time:1,totalEmptySpace:1})).status(200)
+  res.send(await Item.find({},{_id:0,name:1,status:1,time:1,totalEmptySpace:1}))
 })
 
 app.get('/:tempatParkir', async(req,res)=>{
