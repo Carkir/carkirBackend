@@ -6,7 +6,6 @@ const multer = require('multer')
 const forms = multer()
 const {nanoid} = require('nanoid')
 const {Credentials, Users} = require('../models/userModels')
-const { response } = require('./readDataRoutes')
 const regex = new RegExp('.*[A-Z\s].*')
 
 app.use(bp.json())
@@ -37,7 +36,7 @@ app.post('/regPhase1',async(req,res)=>{
             })
         }
     }catch(error){
-        console.log(error)
+        console.log(error)  
         res.send('Fail to register')
     }
 
@@ -84,6 +83,11 @@ app.post('/regFinal',async(req,res)=>{
 app.post('/login',async(req,res)=>{
     const username = req.body.username
     const password = req.body.password
+
+    if(!username || !password){
+        res.send('please fill all require form : username and password').status(400)
+        return
+    }
 
     const accountMatcher = await Credentials.findOne({username:username},{_id:0,username:1,password:1,userId:1})
     if (accountMatcher != null ){
