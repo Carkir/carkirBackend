@@ -3,15 +3,15 @@ const mongoose = require('mongoose')
 const app = express()
 const {Firestore} = require('@google-cloud/firestore')
 const port = process.env.PORT || 8080
+const chokidar = require('chokidar')
+const { dirname } = require('path')
 require('dotenv').config();
+
 const tes = require('./routes/testRoutes') 
 const inputData = require('./routes/inputDataRoutes')
 const imageData = require('./routes/imageRoutes') 
 const readData = require('./routes/readDataRoutes') 
-const chokidar = require('chokidar')
-const watcher = chokidar.watch('./Documents',{ignored: /^\./, persistent: true})
-const fs = require('fs')
-const { dirname } = require('path')
+const authData = require('./routes/authRoutes')
 
 //connect to db
 mongoose.connect( `${process.env.CONNECTION_STRING}`,{
@@ -30,6 +30,7 @@ app.use('/',tes)
 app.use('/input',inputData)
 app.use('/image',imageData)
 app.use('/read',readData)
+app.use('/auth',authData)
 app.use(express.static(dirname+'Documentsl'))
 
 const firestore = new Firestore({})
