@@ -6,7 +6,9 @@ const multer = require('multer')
 const forms = multer()
 const {nanoid} = require('nanoid')
 const {Credentials, Users} = require('../models/userModels')
-const regex = new RegExp('.*[A-Z\s].*')
+const usernameRegex = new RegExp('.*[A-Z\\s]+')
+const passwordRegex = new RegExp('^[A-Za-z][A-Za-z0-9]*$')
+const emailChecker = require('email-validator')
 
 app.use(bp.json())
 app.use(bp.urlencoded({extended: true}))
@@ -17,11 +19,11 @@ app.post('/regPhase1',async(req,res)=>{
     const username = req.body.username  
 
     if(!username){
-        res.send('username cannot be empty').status(400)
+        res.status(400).send('username cannot be empty')
         return
     }
-    if(!username.match(regex)){
-        res.send('username must cannot contains uppercase and whitespace!').status(400)
+    if(usernameRegex.test(username)){
+        res.status(400).send('username cannot contains uppercase and whitespace!')
         return
     }
 
@@ -47,12 +49,27 @@ app.post('/regFinal',async(req,res)=>{
     const username = req.body.username
     const name = req.body.name
     const email = req.body.email
-    const password = await bcrypt.hash(req.body.password,10)
+    const password = req.body.password
+
+    if(!userId || !username || !name || !email || !password){
+        res.status(401).send('please fill all required form')
+        return
+    }
+
+    if(!emailChecker.validate(email)){
+        res.status(401).send('please insert valid email format')
+        return
+    }
+
+    if(!passwordRegex.test(password)){
+        res.status(401).send('password cannot contain whitespace')
+        return
+    }
 
     const credential = new Credentials({
         userId : userId,
         username: username,
-        password : password
+        password : await bcrypt.hash(password,10)
     })
 
     const user = new Users({
@@ -103,7 +120,7 @@ app.post('/login',async(req,res)=>{
 })
 
 app.post('/',(req,res)=>{
-    res.send('error').status(400)
+    res.status(400).send('error')
 })
 
 module.exports = app
