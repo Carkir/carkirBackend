@@ -37,10 +37,10 @@ app.get('/:tempatParkir', async(req,res)=>{
         time: result.time,
         priceLow: result.priceLow,
         priceHigh: result.priceHigh,
-        totalEmptySpace: result.totalEmptySpace,
+        totalEmptySpace: result.gtotalEmptySpace,
         location: result.clusterCount
     }
-    res.send(output).status(201)
+    res.status(201).send(output)
 })
 
 module.exports = app
