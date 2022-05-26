@@ -6,12 +6,17 @@ const multer = require('multer')
 const forms = multer()
 const {inputDataFromJson} = require('../functions/input')
 const {updateInfo} = require('../functions/update')
+const {verifyToken} = require('../functions/tokenize')
+
+
 app.use(bodyParser.json())
 app.use(forms.array())
 app.use(bodyParser.urlencoded({extended:true}))
 
 
-app.get('/input/:filename', (req, res) => {
+app.get('/input/:filename', verifyToken,(req, res) => {
+  if(Boolean(req.user.mlInbound) != true) return res.sendStatus(403)
+
   const filename = req.params.filename
   inputDataFromJson(filename)
   res.send('halo')
