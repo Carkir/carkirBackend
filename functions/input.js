@@ -7,15 +7,15 @@ async function inputDataFromJson(filename) {
     bucketName = 'carkir-storage'
     const nameExtension = filename + '.json'
     const contents = await storage.bucket(bucketName).file(nameExtension).download();
-    const totalObject = await findEmptySpace(filename)
-    const totalValue = Number(totalObject.total)
+    
     const result = await Item.findOne({
       tempatParkir: `${filename}`
     })
   
     if(result){
       console.log('Waduh ada')
-      
+      const totalObject = await findEmptySpace(filename)
+      const totalValue = Number(totalObject.total)
       
       await Item.updateOne(
         { tempatParkir: filename },
@@ -28,6 +28,8 @@ async function inputDataFromJson(filename) {
       countCluster(filename)
       return
     }
+    const totalObject = await findEmptySpace(filename)
+    const totalValue = Number(totalObject.total)
     const placeName = filename.split('_').join(' ')
     const item = new Item({
       tempatParkir: filename,
