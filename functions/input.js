@@ -28,8 +28,6 @@ async function inputDataFromJson(filename) {
       countCluster(filename)
       return
     }
-    const totalObject = await findEmptySpace(filename)
-    const totalValue = Number(totalObject.total)
     const placeName = filename.split('_').join(' ')
     const item = new Item({
       tempatParkir: filename,
@@ -41,7 +39,7 @@ async function inputDataFromJson(filename) {
       timeClose : 1655805600000,
       time: '10.00 WIB - 17.00 WIB',
       status : '',
-      totalEmptySpace: totalValue,
+      totalEmptySpace: 0,
       denah: JSON.parse(contents)
     })
     await item.save()
