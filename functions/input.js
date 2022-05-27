@@ -7,15 +7,16 @@ async function inputDataFromJson(filename) {
     bucketName = 'carkir-storage'
     const nameExtension = filename + '.json'
     const contents = await storage.bucket(bucketName).file(nameExtension).download();
-  
+    const totalObject = await findEmptySpace(filename)
+    const totalValue = Number(totalObject.total)
     const result = await Item.findOne({
       tempatParkir: `${filename}`
     })
   
     if(result){
       console.log('Waduh ada')
-      const totalObject = await findEmptySpace(filename)
-      const totalValue = Number(totalObject.total)
+      
+      
       await Item.updateOne(
         { tempatParkir: filename },
         { $set: {
@@ -38,7 +39,7 @@ async function inputDataFromJson(filename) {
       timeClose : 1655805600000,
       time: '10.00 WIB - 17.00 WIB',
       status : '',
-      totalEmptySpace: 0,
+      totalEmptySpace: totalValue,
       denah: JSON.parse(contents)
     })
     await item.save()
