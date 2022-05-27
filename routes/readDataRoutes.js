@@ -2,8 +2,6 @@ const express = require('express')
 const app = express()
 const Item = require('../models/tempatModels')
 const bodyParser = require('body-parser');
-const {findEmptySpace} = require('../functions/input')
-
 
 app.use(bodyParser.json())
 
@@ -25,8 +23,10 @@ app.get('/Occupancy/:name/:floor', async (req, res) => {
       Occupancy += element.Occupancy
     }
   });
-
-  filterDataByFloor.unshift(Occupancy)
+  
+  filterDataByFloor.forEach(function (element) {
+    element.floorAvailability = Occupancy;
+  });
   res.status(201).send(filterDataByFloor)
 })
 
