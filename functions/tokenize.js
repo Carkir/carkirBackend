@@ -1,6 +1,12 @@
+const res = require('express/lib/response')
 const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
-function createToken(){}
+function createToken(data){
+    return {
+        accessToken : jwt.sign(data,process.env.SECRET_KEY)
+    }
+}
 
 function verifyToken(req, res, next){
     const autHeader = req.headers['authorization']
@@ -14,4 +20,4 @@ function verifyToken(req, res, next){
 
 }
 
-module.exports = {verifyToken}
+module.exports = {createToken,verifyToken}
