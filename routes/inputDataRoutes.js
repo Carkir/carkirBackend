@@ -14,7 +14,6 @@ app.use(bodyParser.json())
 // app.use(forms.array())
 app.use(fileupload())
 
-
 app.get('/input/:filename', verifyToken,(req, res) => {
   if(Boolean(req.user.mlInbound) != true) return res.sendStatus(401)
 
