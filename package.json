@@ -16,6 +16,7 @@
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "chokidar": "^3.5.3",
+    "cookie-parser": "^1.4.6",
     "date-and-time": "^2.3.1",
     "dotenv": "^16.0.1",
     "email-validator": "^2.0.4",

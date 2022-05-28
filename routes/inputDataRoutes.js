@@ -8,14 +8,17 @@ const {inputDataFromJson} = require('../functions/input')
 const {updateInfo} = require('../functions/update')
 const {verifyToken} = require('../functions/tokenize')
 const fileupload = require('express-fileupload')
+const cp = require('cookie-parser')
+
 
 
 app.use(bodyParser.json())
-// app.use(forms.array())
+app.use(cp())
 app.use(fileupload())
 
 app.get('/input/:filename', verifyToken,(req, res) => {
-  if(Boolean(req.user.mlInbound) != true) return res.sendStatus(401)
+  if(req.user.mlInbound != null && Boolean(req.user.mlInbound) != true) return res.sendStatus(401)
+  if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
 
   const filename = req.params.filename
   inputDataFromJson(filename)
@@ -23,7 +26,8 @@ app.get('/input/:filename', verifyToken,(req, res) => {
 })
 
 app.post('/update/:tempatParkir', verifyToken, async(req,res) => {
-  if(Boolean(req.user.isAndroid != true)) return res.sendStatus(401)
+  if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
+  if( req.user.isAndroid!= null && Boolean(req.user.isAndroid)!= true) return res.sendStatus(403)
 
   const tempatParkir = req.params.tempatParkir
   const hourOpen = req.body.hourOpen

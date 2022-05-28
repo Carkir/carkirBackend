@@ -3,11 +3,15 @@ const app = express()
 const Item = require('../models/tempatModels')
 const bodyParser = require('body-parser');
 const {createToken,verifyToken} = require('../functions/tokenize')
+const cp = require('cookie-parser')
 
 app.use(bodyParser.json())
+app.use(cp())
 
 app.get('/Occupancy/:name/:floor',verifyToken, async (req, res) => {
-  if(Boolean(req.user.isAndroid)!=true) res.sendStatus(401)
+  if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
+  if( req.user.isAndroid!= null && Boolean(req.user.isAndroid)!= true) return res.sendStatus(403)
+
   const name = req.params.name
   const floor = req.params.floor
   const cluster = req.params.cluster
@@ -33,12 +37,16 @@ app.get('/Occupancy/:name/:floor',verifyToken, async (req, res) => {
 })
 
 app.get('/allPlace',verifyToken,async(req,res)=>{
-  if(Boolean(req.user.isAndroid)!=true) res.sendStatus(401)
-  res.send(await Item.find({},{_id:0,name:1,status:1,time:1,totalEmptySpace:1}))
+  if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
+  if( req.user.isAndroid!= null && Boolean(req.user.isAndroid)!= true) return res.sendStatus(403)
+
+  res.send(await Item.find({},{_id:0,name:1,status:1,time:1,totalEmptySpace:1,image:1}))
 })
 
 app.get('/:name', verifyToken,async(req,res)=>{
-    if(Boolean(req.user.isAndroid)!=true) res.sendStatus(401)
+  if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
+  if( req.user.isAndroid!= null && Boolean(req.user.isAndroid)!= true) return res.sendStatus(403)
+  
     const name = req.params.name
     const result = await Item.findOne({
       name: `${name}`
