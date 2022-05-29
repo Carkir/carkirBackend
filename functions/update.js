@@ -1,7 +1,8 @@
 const Item = require('../models/tempatModels')
 const formatDate = require('date-and-time')
+const fs = require('fs')
 
-async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose,priceHigh,priceLow,alamat){
+async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose,priceHigh,priceLow,alamat,image){
 
     const timeClose = new Date()
     const timeOpen = new Date()
@@ -13,6 +14,7 @@ async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose
 
     const timeOpenFormat = formatDate.format(timeOpen,'HH:mm')
     const timeCloseFormat = formatDate.format(timeClose,'HH:mm')  
+    console.log(image.toString('base64'))
 
     try{
         await Item.updateOne({tempatParkir:tempatParkir},{
@@ -22,7 +24,8 @@ async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose
                 priceHigh: priceHigh,
                 priceLow: priceLow,
                 alamat : alamat,
-                time: `${timeOpenFormat} WIB - ${timeCloseFormat} WIB`
+                time: `${timeOpenFormat} WIB - ${timeCloseFormat} WIB`,
+                image: image.toString('base64')
             }
         })
     }catch(error){

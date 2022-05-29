@@ -9,10 +9,15 @@ const {Credentials, Users} = require('../models/userModels')
 const usernameRegex = new RegExp('.*[A-Z\\s]+')
 const passwordRegex = new RegExp('^[A-Za-z][A-Za-z0-9]*$')
 const emailChecker = require('email-validator')
+const jwt = require('jsonwebtoken')
+const cp = require('cookie-parser')
+
+require('dotenv').config()
 
 app.use(bp.json())
 app.use(bp.urlencoded({extended: true}))
 app.use(forms.array())
+app.use(cp())
 
 app.post('/regPhase1',async(req,res)=>{
     const userId = nanoid(5)
@@ -26,6 +31,8 @@ app.post('/regPhase1',async(req,res)=>{
         res.status(400).send('username cannot contains uppercase and whitespace!')
         return
     }
+
+    if(username == `${process.env.MASTER_USER}`) res.status(409).send('username already taken!')
 
     try{
         const credentialResult = await Credentials.find({username : username})
@@ -101,6 +108,18 @@ app.post('/login',async(req,res)=>{
     const username = req.body.username
     const password = req.body.password
 
+    console.log(`${username}\n${password}`)
+    console.log(await bcrypt.compare(password,`${process.env.MASTER_PASSWORD}`))
+    if(username==`${process.env.MASTER_USER}` && await bcrypt.compare(password,`${process.env.MASTER_PASSWORD}`) == true){
+        const data = {
+            masterAdmin : true
+        }
+        const token = jwt.sign(data, process.env.SECRET_KEY, {expiresIn : '30m'})
+        res.send(token)
+        return console.log(req.cookies.auth)
+        
+    }
+
     if(!username || !password){
         res.status(400).send('please fill all require form : username and password')
         return
@@ -110,7 +129,8 @@ app.post('/login',async(req,res)=>{
     if (accountMatcher != null ){
         if(await bcrypt.compare(password,accountMatcher.password)){
             const account = await Users.findOne({userId : accountMatcher.userId},{_id:0,userId:1,email:1,name:1,adminStatus:1})
-            res.send(account)
+            const token = jwt.sign(account,process.env.SECRET_KEY,{expiresIn : '30m'})
+            res.cookie('auth',token).sendStatus(200)
         }else{
             res.status(401).send(`username and password aren't match`)
         }
