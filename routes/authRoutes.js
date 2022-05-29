@@ -109,14 +109,13 @@ app.post('/login',async(req,res)=>{
     const password = req.body.password
 
     console.log(`${username}\n${password}`)
-    
-
-    if(username=='' && await bcrypt.compare(password,`${process.env.MASTER_PASSWORD}`) == true){
+    console.log(await bcrypt.compare(password,`${process.env.MASTER_PASSWORD}`))
+    if(username==`${process.env.MASTER_USER}` && await bcrypt.compare(password,`${process.env.MASTER_PASSWORD}`) == true){
         const data = {
             masterAdmin : true
         }
         const token = jwt.sign(data, process.env.SECRET_KEY, {expiresIn : '30m'})
-        res.cookie('auth', token).send('success')
+        res.send(token)
         return console.log(req.cookies.auth)
         
     }

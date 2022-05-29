@@ -43,25 +43,21 @@ app.get('/allPlace',verifyToken,async(req,res)=>{
   res.send(await Item.find({},{_id:0,name:1,status:1,time:1,totalEmptySpace:1,image:1}))
 })
 
+app.get('/all',verifyToken,async(req,res)=>{
+  if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
+
+  res.send(await Item.find({},{_id:0,denah:0,clusterCount:0}))
+})
+
 app.get('/:name', verifyToken,async(req,res)=>{
   if( req.user.masterAdmin!= null && Boolean(req.user.masterAdmin)!= true) return res.sendStatus(403)
   if( req.user.isAndroid!= null && Boolean(req.user.isAndroid)!= true) return res.sendStatus(403)
   
     const name = req.params.name
     const result = await Item.findOne({
-      name: `${name}`
-      })
-    const output={
-        name: result.name,
-        address: result.address,
-        status: result.status,
-        time: result.time,
-        priceLow: result.priceLow,
-        priceHigh: result.priceHigh,
-        totalEmptySpace: result.totalEmptySpace,
-        location: result.clusterCount
-    }
-    res.status(201).send(output)
+      tempatParkir: `${name}`
+      },{_id:0,denah:0,clusterCount:0})
+    res.status(200).send(result)
 })
 
 module.exports = app
