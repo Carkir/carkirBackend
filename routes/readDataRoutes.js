@@ -56,7 +56,7 @@ app.get('/:name', verifyToken,async(req,res)=>{
     const name = req.params.name
     const result = await Item.findOne({
       tempatParkir: `${name}`
-      },{_id:0,denah:0,clusterCount:0})
+      },{_id:0,denah:0})
     res.status(200).send(result)
 })
 
