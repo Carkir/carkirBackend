@@ -6,12 +6,19 @@ const port = process.env.PORT || 8080
 const chokidar = require('chokidar')
 const { dirname } = require('path')
 require('dotenv').config();
+const multer = require('multer')
+const bodyParser = require('body-parser');
+const upload = multer({ dest: 'uploads/' })
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
 
 const tes = require('./routes/testRoutes') 
 const inputData = require('./routes/inputDataRoutes')
 const imageData = require('./routes/imageRoutes') 
 const readData = require('./routes/readDataRoutes') 
 const authData = require('./routes/authRoutes')
+const ml = require('./routes/mlRoutes')
 
 //connect to db
 mongoose.connect( `${process.env.CONNECTION_STRING}`,{
@@ -31,6 +38,7 @@ app.use('/input',inputData)
 app.use('/image',imageData)
 app.use('/read',readData)
 app.use('/auth',authData)
+app.use('/ml',ml)
 app.use(express.static(dirname+'Documentsl'))
 
 const firestore = new Firestore({})
