@@ -2,20 +2,19 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser');
 const _ = require('underscore')
-const multer = require('multer')
-const forms = multer()
 const {inputDataFromJson} = require('../functions/input')
 const {updateInfo} = require('../functions/update')
 const {verifyToken} = require('../functions/tokenize')
-const fileupload = require('express-fileupload')
 const cp = require('cookie-parser')
 
 
 
 app.use(bodyParser.json({limit:'50mb'}))
 app.use(bodyParser.urlencoded({limit:'50mb',extended:true, parameterLimit:50000}))
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
 app.use(cp())
-app.use(fileupload())
+
 
 app.get('/input/:filename', verifyToken,(req, res) => {
   if(req.user.mlInbound != null && Boolean(req.user.mlInbound) != true) return res.sendStatus(401)
