@@ -3,7 +3,7 @@ const formatDate = require('date-and-time')
 const fs = require('fs')
 
 async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose,priceHigh,priceLow,alamat,image){
-
+    console.log('CALLED!')
     const timeClose = new Date()
     const timeOpen = new Date()
     
@@ -14,7 +14,7 @@ async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose
 
     const timeOpenFormat = formatDate.format(timeOpen,'HH:mm')
     const timeCloseFormat = formatDate.format(timeClose,'HH:mm')  
-    console.log(image.toString('base64'))
+    console.log(image)
 
     try{
         await Item.updateOne({tempatParkir:tempatParkir},{
@@ -25,7 +25,7 @@ async function updateInfo(tempatParkir,hourOpen,hourClose,minuteOpen,minuteClose
                 priceLow: priceLow,
                 alamat : alamat,
                 time: `${timeOpenFormat} WIB - ${timeCloseFormat} WIB`,
-                image: image.toString('base64')
+                image: image
             }
         })
     }catch(error){
