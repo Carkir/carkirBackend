@@ -17,6 +17,11 @@ app.post('/convert/:id',async(req,res)=>{
     res.send(id)  
 })
 
+app.post('/convert',async(req,res)=>{
+    const image = req.files.image.data.toString('base64')
+    res.send(image)  
+})
+
 app.get('/getheader/:id',async(req,res)=>{
     const id = req.params.id.toString()
     const result = await Item.find({tempatParkir:id},{_id:0,headerImage:1})
