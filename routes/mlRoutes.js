@@ -31,12 +31,6 @@ app.get('/getSlot/:filename', async function(req, res) {
     const filename = req.params.filename
     bucketName = 'carkir-slot'
     const nameExtension = filename + '.json'
-  } catch (error) {
-    console.log(error)
-    res.status(404).send('file not found')
-  }
-
-  try {
     const contents = await storage.bucket(bucketName).file(nameExtension).download();
     res.status(201).send(JSON.parse(contents))
   } catch (error) {
