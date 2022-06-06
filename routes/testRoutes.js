@@ -12,7 +12,7 @@ app.use(bp.urlencoded({extended:true}))
 app.get('/',(req,res)=>{
     axios.get('https://google.com').then(
         (response)=>{
-            res.sendS(response.status)
+            res.send(response.status)
         })
      })
 
