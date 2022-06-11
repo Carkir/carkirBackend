@@ -4,7 +4,7 @@ const {Storage} = require('@google-cloud/storage');
 const storage = new Storage();
 
 async function inputDataFromJson(filename) {
-    bucketName = 'carkir-slot'
+    bucketName = 'carkir-storage'
     const nameExtension = filename + '.json'
     const contents = await storage.bucket(bucketName).file(nameExtension).download();
     
